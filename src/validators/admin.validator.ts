@@ -187,7 +187,6 @@ const permissionEnum = z.enum([
   'services',
   'settings',
   'notifications',
-  'admins',
 ]);
 
 export const createAdminSchema = z.object({
