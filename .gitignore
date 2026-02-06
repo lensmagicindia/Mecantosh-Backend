@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Uploads (keep folder structure, ignore files)
+uploads/profiles/*
+uploads/vehicles/*
+!uploads/profiles/.gitkeep
+!uploads/vehicles/.gitkeep
+
+# Test coverage
+coverage/
+
+# Misc
+*.tgz
+.npm

@@ -1,0 +1,10 @@
+export { authService } from './auth.service.js';
+export { userService } from './user.service.js';
+export { vehicleService } from './vehicle.service.js';
+export { serviceCatalogService } from './service.service.js';
+export { bookingService } from './booking.service.js';
+export { slotService } from './slot.service.js';
+export { notificationService } from './notification.service.js';
+export { otpService } from './otp.service.js';
+export { smsService } from './sms.service.js';
+export { tokenService } from './token.service.js';
