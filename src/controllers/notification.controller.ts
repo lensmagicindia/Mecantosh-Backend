@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { RequestHandler } from 'express';
 import { notificationService } from '../services/notification.service.js';
 import { adminNotificationsService } from '../services/admin/notifications.service.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
@@ -14,7 +14,7 @@ import {
  * @route   POST /api/v1/notifications/register-device
  * @access  Private
  */
-export const registerDevice = asyncHandler(async (req: Request, res: Response) => {
+export const registerDevice: RequestHandler = asyncHandler(async (req, res) => {
   const { fcmToken, platform } = req.body as RegisterDeviceInput;
 
   await notificationService.registerDevice(req.userId!, fcmToken, platform);
@@ -27,7 +27,7 @@ export const registerDevice = asyncHandler(async (req: Request, res: Response) =
  * @route   DELETE /api/v1/notifications/unregister-device
  * @access  Private
  */
-export const unregisterDevice = asyncHandler(async (req: Request, res: Response) => {
+export const unregisterDevice: RequestHandler = asyncHandler(async (req, res) => {
   const { fcmToken } = req.body as UnregisterDeviceInput;
 
   await notificationService.unregisterDevice(req.userId!, fcmToken);
@@ -40,7 +40,7 @@ export const unregisterDevice = asyncHandler(async (req: Request, res: Response)
  * @route   POST /api/v1/notifications/event
  * @access  Private (Customer auth)
  */
-export const createEvent = asyncHandler(async (req: Request, res: Response) => {
+export const createEvent: RequestHandler = asyncHandler(async (req, res) => {
   const { type, title, message, data } = req.body as CreateEventInput;
 
   const notification = await adminNotificationsService.createNotification({

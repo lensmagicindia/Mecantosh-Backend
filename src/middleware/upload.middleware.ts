@@ -1,6 +1,6 @@
-import multer, { FileFilterCallback } from 'multer';
+import multer, { FileFilterCallback, Multer } from 'multer';
 import path from 'path';
-import { Request } from 'express';
+import { Request, RequestHandler } from 'express';
 import { ApiError } from '../utils/ApiError.js';
 import { UPLOAD_LIMITS } from '../utils/constants.js';
 import { config } from '../config/index.js';
@@ -47,7 +47,7 @@ const fileFilter = (
 };
 
 // Create multer instance with appropriate storage
-export const upload = multer({
+export const upload: Multer = multer({
   storage: useS3 ? memoryStorage : diskStorage,
   fileFilter,
   limits: {
@@ -56,10 +56,10 @@ export const upload = multer({
 });
 
 // Middleware for single image upload
-export const uploadSingleImage = (fieldName: string) => upload.single(fieldName);
+export const uploadSingleImage = (fieldName: string): RequestHandler => upload.single(fieldName);
 
 // Middleware for multiple images
-export const uploadMultipleImages = (fieldName: string, maxCount: number) =>
+export const uploadMultipleImages = (fieldName: string, maxCount: number): RequestHandler =>
   upload.array(fieldName, maxCount);
 
 // Error handler for multer

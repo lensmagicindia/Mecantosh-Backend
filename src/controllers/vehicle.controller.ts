@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { RequestHandler } from 'express';
 import { vehicleService } from '../services/vehicle.service.js';
 import { s3Service } from '../services/s3.service.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
@@ -11,7 +11,7 @@ import { isUsingS3 } from '../middleware/upload.middleware.js';
  * @route   GET /api/v1/vehicles
  * @access  Private
  */
-export const getVehicles = asyncHandler(async (req: Request, res: Response) => {
+export const getVehicles: RequestHandler = asyncHandler(async (req, res) => {
   const result = await vehicleService.getUserVehicles(req.userId!);
 
   return ApiResponse.ok(res, 'Vehicles retrieved', result);
@@ -22,7 +22,7 @@ export const getVehicles = asyncHandler(async (req: Request, res: Response) => {
  * @route   GET /api/v1/vehicles/:id
  * @access  Private
  */
-export const getVehicle = asyncHandler(async (req: Request, res: Response) => {
+export const getVehicle: RequestHandler = asyncHandler(async (req, res) => {
   const vehicle = await vehicleService.getVehicleById(req.params.id, req.userId!);
 
   return ApiResponse.ok(res, 'Vehicle retrieved', vehicle);
@@ -33,7 +33,7 @@ export const getVehicle = asyncHandler(async (req: Request, res: Response) => {
  * @route   POST /api/v1/vehicles
  * @access  Private
  */
-export const createVehicle = asyncHandler(async (req: Request, res: Response) => {
+export const createVehicle: RequestHandler = asyncHandler(async (req, res) => {
   const data = req.body as CreateVehicleInput;
 
   const vehicle = await vehicleService.createVehicle(req.userId!, data);
@@ -46,7 +46,7 @@ export const createVehicle = asyncHandler(async (req: Request, res: Response) =>
  * @route   PATCH /api/v1/vehicles/:id
  * @access  Private
  */
-export const updateVehicle = asyncHandler(async (req: Request, res: Response) => {
+export const updateVehicle: RequestHandler = asyncHandler(async (req, res) => {
   const data = req.body as UpdateVehicleInput;
 
   const vehicle = await vehicleService.updateVehicle(req.params.id, req.userId!, data);
@@ -59,7 +59,7 @@ export const updateVehicle = asyncHandler(async (req: Request, res: Response) =>
  * @route   DELETE /api/v1/vehicles/:id
  * @access  Private
  */
-export const deleteVehicle = asyncHandler(async (req: Request, res: Response) => {
+export const deleteVehicle: RequestHandler = asyncHandler(async (req, res) => {
   await vehicleService.deleteVehicle(req.params.id, req.userId!);
 
   return ApiResponse.ok(res, 'Vehicle deleted successfully');
@@ -70,7 +70,7 @@ export const deleteVehicle = asyncHandler(async (req: Request, res: Response) =>
  * @route   POST /api/v1/vehicles/:id/image
  * @access  Private
  */
-export const uploadVehicleImage = asyncHandler(async (req: Request, res: Response) => {
+export const uploadVehicleImage: RequestHandler = asyncHandler(async (req, res) => {
   if (!req.file) {
     return ApiResponse.error(res, 400, 'No image file provided');
   }
@@ -102,7 +102,7 @@ export const uploadVehicleImage = asyncHandler(async (req: Request, res: Respons
  * @route   PATCH /api/v1/vehicles/:id/set-default
  * @access  Private
  */
-export const setDefaultVehicle = asyncHandler(async (req: Request, res: Response) => {
+export const setDefaultVehicle: RequestHandler = asyncHandler(async (req, res) => {
   const vehicle = await vehicleService.setDefault(req.params.id, req.userId!);
 
   return ApiResponse.ok(res, 'Vehicle set as default', vehicle);

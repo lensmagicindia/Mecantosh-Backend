@@ -5,7 +5,7 @@ import { authenticate } from '../middleware/auth.middleware.js';
 import { uploadSingleImage } from '../middleware/upload.middleware.js';
 import { updateUserSchema } from '../validators/user.validator.js';
 
-const router = Router();
+const router: Router = Router();
 
 // All routes are protected
 router.use(authenticate);

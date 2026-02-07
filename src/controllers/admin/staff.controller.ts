@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { RequestHandler } from 'express';
 import { adminStaffService } from '../../services/admin/staff.service.js';
 import { ApiResponse } from '../../utils/ApiResponse.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
@@ -9,7 +9,7 @@ import { UpdateStaffConfigInput } from '../../validators/admin.validator.js';
  * @route   GET /api/v1/admin/staff/config
  * @access  Private (Admin)
  */
-export const getStaffConfig = asyncHandler(async (_req: Request, res: Response) => {
+export const getStaffConfig: RequestHandler = asyncHandler(async (_req, res) => {
   const config = await adminStaffService.getStaffConfig();
 
   return ApiResponse.ok(res, 'Staff configuration retrieved', config);
@@ -20,7 +20,7 @@ export const getStaffConfig = asyncHandler(async (_req: Request, res: Response) 
  * @route   PATCH /api/v1/admin/staff/config
  * @access  Private (Admin)
  */
-export const updateStaffConfig = asyncHandler(async (req: Request, res: Response) => {
+export const updateStaffConfig: RequestHandler = asyncHandler(async (req, res) => {
   const data = req.body as UpdateStaffConfigInput;
 
   const config = await adminStaffService.updateStaffConfig(data);
@@ -33,7 +33,7 @@ export const updateStaffConfig = asyncHandler(async (req: Request, res: Response
  * @route   GET /api/v1/admin/staff/availability/:date
  * @access  Private (Admin)
  */
-export const getDailyAvailability = asyncHandler(async (req: Request, res: Response) => {
+export const getDailyAvailability: RequestHandler = asyncHandler(async (req, res) => {
   const { date } = req.params;
 
   const availability = await adminStaffService.getDailyAvailability(date);
@@ -46,7 +46,7 @@ export const getDailyAvailability = asyncHandler(async (req: Request, res: Respo
  * @route   GET /api/v1/admin/staff/bookings/:date
  * @access  Private (Admin)
  */
-export const getBookingsForDate = asyncHandler(async (req: Request, res: Response) => {
+export const getBookingsForDate: RequestHandler = asyncHandler(async (req, res) => {
   const { date } = req.params;
 
   const bookings = await adminStaffService.getBookingsForDate(date);

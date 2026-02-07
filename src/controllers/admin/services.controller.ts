@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { RequestHandler } from 'express';
 import { adminServicesService } from '../../services/admin/services.service.js';
 import { ApiResponse } from '../../utils/ApiResponse.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
@@ -13,7 +13,7 @@ import {
  * @route   GET /api/v1/admin/services
  * @access  Private (Admin)
  */
-export const getServices = asyncHandler(async (_req: Request, res: Response) => {
+export const getServices: RequestHandler = asyncHandler(async (_req, res) => {
   const services = await adminServicesService.getAllServices();
 
   return ApiResponse.ok(res, 'Services retrieved', { services });
@@ -24,7 +24,7 @@ export const getServices = asyncHandler(async (_req: Request, res: Response) => 
  * @route   GET /api/v1/admin/services/:id
  * @access  Private (Admin)
  */
-export const getServiceById = asyncHandler(async (req: Request, res: Response) => {
+export const getServiceById: RequestHandler = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   const service = await adminServicesService.getServiceById(id);
@@ -37,7 +37,7 @@ export const getServiceById = asyncHandler(async (req: Request, res: Response) =
  * @route   POST /api/v1/admin/services
  * @access  Private (Admin)
  */
-export const createService = asyncHandler(async (req: Request, res: Response) => {
+export const createService: RequestHandler = asyncHandler(async (req, res) => {
   const data = req.body as CreateServiceInput;
 
   const service = await adminServicesService.createService({
@@ -60,7 +60,7 @@ export const createService = asyncHandler(async (req: Request, res: Response) =>
  * @route   PATCH /api/v1/admin/services/:id
  * @access  Private (Admin)
  */
-export const updateService = asyncHandler(async (req: Request, res: Response) => {
+export const updateService: RequestHandler = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const data = req.body as UpdateServiceInput;
 
@@ -74,7 +74,7 @@ export const updateService = asyncHandler(async (req: Request, res: Response) =>
  * @route   DELETE /api/v1/admin/services/:id
  * @access  Private (Admin)
  */
-export const deleteService = asyncHandler(async (req: Request, res: Response) => {
+export const deleteService: RequestHandler = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   await adminServicesService.deleteService(id);
@@ -87,7 +87,7 @@ export const deleteService = asyncHandler(async (req: Request, res: Response) =>
  * @route   POST /api/v1/admin/services/reorder
  * @access  Private (Admin)
  */
-export const reorderServices = asyncHandler(async (req: Request, res: Response) => {
+export const reorderServices: RequestHandler = asyncHandler(async (req, res) => {
   const { orderedIds } = req.body as ReorderServicesInput;
 
   const services = await adminServicesService.reorderServices(orderedIds);

@@ -11,7 +11,7 @@ import {
   firebaseLoginSchema,
 } from '../validators/auth.validator.js';
 
-const router = Router();
+const router: Router = Router();
 
 // Public routes
 router.post('/send-otp', authLimiter, validate(sendOTPSchema), authController.sendOTP);

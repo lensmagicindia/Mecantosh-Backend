@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { RequestHandler } from 'express';
 import { adminAuthService } from '../../services/admin/auth.service.js';
 import { ApiResponse } from '../../utils/ApiResponse.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
@@ -9,7 +9,7 @@ import { AdminLoginInput, AdminRefreshTokenInput } from '../../validators/admin.
  * @route   POST /api/v1/admin/auth/login
  * @access  Public
  */
-export const login = asyncHandler(async (req: Request, res: Response) => {
+export const login: RequestHandler = asyncHandler(async (req, res) => {
   const { email, password } = req.body as AdminLoginInput;
 
   const { user, tokens } = await adminAuthService.login(email, password);
@@ -26,7 +26,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
  * @route   POST /api/v1/admin/auth/logout
  * @access  Private (Admin)
  */
-export const logout = asyncHandler(async (req: Request, res: Response) => {
+export const logout: RequestHandler = asyncHandler(async (req, res) => {
   const { refreshToken } = req.body;
 
   if (refreshToken) {
@@ -41,7 +41,7 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
  * @route   POST /api/v1/admin/auth/refresh-token
  * @access  Public
  */
-export const refreshToken = asyncHandler(async (req: Request, res: Response) => {
+export const refreshToken: RequestHandler = asyncHandler(async (req, res) => {
   const { refreshToken } = req.body as AdminRefreshTokenInput;
 
   const tokens = await adminAuthService.refreshTokens(refreshToken);
@@ -58,7 +58,7 @@ export const refreshToken = asyncHandler(async (req: Request, res: Response) => 
  * @route   GET /api/v1/admin/auth/me
  * @access  Private (Admin)
  */
-export const getMe = asyncHandler(async (req: Request, res: Response) => {
+export const getMe: RequestHandler = asyncHandler(async (req, res) => {
   const admin = req.admin!;
 
   return ApiResponse.ok(res, 'Admin profile retrieved', {

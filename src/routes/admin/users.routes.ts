@@ -2,7 +2,7 @@ import { Router } from 'express';
 import * as usersController from '../../controllers/admin/users.controller.js';
 import { authenticateAdmin, requirePermission } from '../../middleware/adminAuth.middleware.js';
 
-const router = Router();
+const router: Router = Router();
 
 // All routes require admin authentication and users permission
 router.use(authenticateAdmin);

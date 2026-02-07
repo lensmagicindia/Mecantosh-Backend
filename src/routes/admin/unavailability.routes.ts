@@ -19,7 +19,7 @@ import {
   unavailabilityDatesQuerySchema,
 } from '../../validators/admin.validator.js';
 
-const router = Router();
+const router: Router = Router();
 
 // All routes require admin authentication and staff permission
 router.use(authenticateAdmin);

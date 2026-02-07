@@ -9,7 +9,7 @@ import {
   getAdminsQuerySchema,
 } from '../../validators/admin.validator.js';
 
-const router = Router();
+const router: Router = Router();
 
 // All routes require admin authentication and super admin role
 router.use(authenticateAdmin);

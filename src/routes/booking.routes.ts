@@ -12,7 +12,7 @@ import {
   bookingIdSchema,
 } from '../validators/booking.validator.js';
 
-const router = Router();
+const router: Router = Router();
 
 // All routes are protected
 router.use(authenticate);

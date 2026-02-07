@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { RequestHandler } from 'express';
 import { adminNotificationsService } from '../../services/admin/notifications.service.js';
 import { ApiResponse } from '../../utils/ApiResponse.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
@@ -10,7 +10,7 @@ import { AdminNotificationType } from '../../interfaces/admin.interface.js';
  * @route   GET /api/v1/admin/notifications
  * @access  Private (Admin)
  */
-export const getNotifications = asyncHandler(async (req: Request, res: Response) => {
+export const getNotifications: RequestHandler = asyncHandler(async (req, res) => {
   const page = parseInt(req.query.page as string) || 1;
   const limit = parseInt(req.query.limit as string) || 20;
   const type = req.query.type as AdminNotificationType | undefined;
@@ -25,7 +25,7 @@ export const getNotifications = asyncHandler(async (req: Request, res: Response)
  * @route   GET /api/v1/admin/notifications/recent
  * @access  Private (Admin)
  */
-export const getRecentNotifications = asyncHandler(async (req: Request, res: Response) => {
+export const getRecentNotifications: RequestHandler = asyncHandler(async (req, res) => {
   const limit = parseInt(req.query.limit as string) || 5;
 
   const notifications = await adminNotificationsService.getRecentNotifications(limit);
@@ -38,7 +38,7 @@ export const getRecentNotifications = asyncHandler(async (req: Request, res: Res
  * @route   GET /api/v1/admin/notifications/unread-count
  * @access  Private (Admin)
  */
-export const getUnreadCount = asyncHandler(async (_req: Request, res: Response) => {
+export const getUnreadCount: RequestHandler = asyncHandler(async (_req, res) => {
   const count = await adminNotificationsService.getUnreadCount();
 
   return ApiResponse.ok(res, 'Unread count retrieved', { count });
@@ -49,7 +49,7 @@ export const getUnreadCount = asyncHandler(async (_req: Request, res: Response) 
  * @route   PATCH /api/v1/admin/notifications/:id/read
  * @access  Private (Admin)
  */
-export const markAsRead = asyncHandler(async (req: Request, res: Response) => {
+export const markAsRead: RequestHandler = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   await adminNotificationsService.markAsRead(id);
@@ -62,7 +62,7 @@ export const markAsRead = asyncHandler(async (req: Request, res: Response) => {
  * @route   POST /api/v1/admin/notifications/mark-all-read
  * @access  Private (Admin)
  */
-export const markAllAsRead = asyncHandler(async (_req: Request, res: Response) => {
+export const markAllAsRead: RequestHandler = asyncHandler(async (_req, res) => {
   await adminNotificationsService.markAllAsRead();
 
   return ApiResponse.ok(res, 'All notifications marked as read');
@@ -73,7 +73,7 @@ export const markAllAsRead = asyncHandler(async (_req: Request, res: Response) =
  * @route   GET /api/v1/admin/notifications/preferences
  * @access  Private (Admin)
  */
-export const getPreferences = asyncHandler(async (req: Request, res: Response) => {
+export const getPreferences: RequestHandler = asyncHandler(async (req, res) => {
   const adminId = req.adminId!;
 
   const preferences = await adminNotificationsService.getPreferences(adminId);
@@ -86,7 +86,7 @@ export const getPreferences = asyncHandler(async (req: Request, res: Response) =
  * @route   PATCH /api/v1/admin/notifications/preferences
  * @access  Private (Admin)
  */
-export const updatePreferences = asyncHandler(async (req: Request, res: Response) => {
+export const updatePreferences: RequestHandler = asyncHandler(async (req, res) => {
   const adminId = req.adminId!;
   const data = req.body as UpdateNotificationPreferencesInput;
 

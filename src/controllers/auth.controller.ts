@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { RequestHandler } from 'express';
 import { authService } from '../services/auth.service.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
@@ -15,7 +15,7 @@ import {
  * @route   POST /api/v1/auth/send-otp
  * @access  Public
  */
-export const sendOTP = asyncHandler(async (req: Request, res: Response) => {
+export const sendOTP: RequestHandler = asyncHandler(async (req, res) => {
   const { phone, countryCode = '+91', purpose } = req.body as SendOTPInput;
 
   const result = await authService.sendOTP(phone, countryCode, purpose);
@@ -31,7 +31,7 @@ export const sendOTP = asyncHandler(async (req: Request, res: Response) => {
  * @route   POST /api/v1/auth/verify-otp
  * @access  Public
  */
-export const verifyOTP = asyncHandler(async (req: Request, res: Response) => {
+export const verifyOTP: RequestHandler = asyncHandler(async (req, res) => {
   const { phone, countryCode = '+91', otp, purpose } = req.body as VerifyOTPInput;
 
   if (purpose === 'login') {
@@ -54,7 +54,7 @@ export const verifyOTP = asyncHandler(async (req: Request, res: Response) => {
  * @route   POST /api/v1/auth/register
  * @access  Public
  */
-export const register = asyncHandler(async (req: Request, res: Response) => {
+export const register: RequestHandler = asyncHandler(async (req, res) => {
   const { phone, countryCode = '+91', otp, name, email } = req.body as RegisterInput;
 
   const { user, tokens } = await authService.register(
@@ -78,7 +78,7 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
  * @route   POST /api/v1/auth/firebase-login
  * @access  Public
  */
-export const firebaseLogin = asyncHandler(async (req: Request, res: Response) => {
+export const firebaseLogin: RequestHandler = asyncHandler(async (req, res) => {
   const { firebaseIdToken, name, email } = req.body as FirebaseLoginInput;
 
   const { user, tokens, isNewUser } = await authService.firebaseLogin(
@@ -101,7 +101,7 @@ export const firebaseLogin = asyncHandler(async (req: Request, res: Response) =>
  * @route   POST /api/v1/auth/refresh-token
  * @access  Public
  */
-export const refreshToken = asyncHandler(async (req: Request, res: Response) => {
+export const refreshToken: RequestHandler = asyncHandler(async (req, res) => {
   const { refreshToken } = req.body as RefreshTokenInput;
 
   const tokens = await authService.refreshToken(refreshToken);
@@ -118,7 +118,7 @@ export const refreshToken = asyncHandler(async (req: Request, res: Response) => 
  * @route   POST /api/v1/auth/logout
  * @access  Private
  */
-export const logout = asyncHandler(async (req: Request, res: Response) => {
+export const logout: RequestHandler = asyncHandler(async (req, res) => {
   const { refreshToken } = req.body;
 
   if (refreshToken) {
@@ -133,7 +133,7 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
  * @route   POST /api/v1/auth/logout-all
  * @access  Private
  */
-export const logoutAll = asyncHandler(async (req: Request, res: Response) => {
+export const logoutAll: RequestHandler = asyncHandler(async (req, res) => {
   await authService.logoutAll(req.userId!);
 
   return ApiResponse.ok(res, 'Logged out from all devices');

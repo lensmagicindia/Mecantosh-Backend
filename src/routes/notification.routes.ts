@@ -8,7 +8,7 @@ import {
   createEventSchema,
 } from '../validators/notification.validator.js';
 
-const router = Router();
+const router: Router = Router();
 
 // All routes are protected
 router.use(authenticate);

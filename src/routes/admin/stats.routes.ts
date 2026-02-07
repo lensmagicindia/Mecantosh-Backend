@@ -2,7 +2,7 @@ import { Router } from 'express';
 import * as statsController from '../../controllers/admin/stats.controller.js';
 import { authenticateAdmin } from '../../middleware/adminAuth.middleware.js';
 
-const router = Router();
+const router: Router = Router();
 
 // All stats routes require admin authentication
 router.use(authenticateAdmin);

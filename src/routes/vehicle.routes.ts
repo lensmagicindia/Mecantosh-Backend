@@ -9,7 +9,7 @@ import {
   vehicleIdSchema,
 } from '../validators/vehicle.validator.js';
 
-const router = Router();
+const router: Router = Router();
 
 // All routes are protected
 router.use(authenticate);

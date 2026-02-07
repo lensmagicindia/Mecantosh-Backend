@@ -4,7 +4,7 @@ import { authenticateAdmin } from '../../middleware/adminAuth.middleware.js';
 import { validate } from '../../middleware/validation.middleware.js';
 import { adminLoginSchema, adminRefreshTokenSchema } from '../../validators/admin.validator.js';
 
-const router = Router();
+const router: Router = Router();
 
 // Public routes
 router.post('/login', validate(adminLoginSchema), authController.login);

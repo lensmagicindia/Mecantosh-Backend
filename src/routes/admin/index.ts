@@ -9,7 +9,7 @@ import statsRoutes from './stats.routes.js';
 import unavailabilityRoutes from './unavailability.routes.js';
 import adminsRoutes from './admins.routes.js';
 
-const router = Router();
+const router: Router = Router();
 
 // Mount admin routes
 router.use('/auth', authRoutes);

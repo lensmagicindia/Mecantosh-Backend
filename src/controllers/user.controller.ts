@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { RequestHandler } from 'express';
 import { userService } from '../services/user.service.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
@@ -9,7 +9,7 @@ import { UpdateUserInput } from '../validators/user.validator.js';
  * @route   GET /api/v1/users/me
  * @access  Private
  */
-export const getMe = asyncHandler(async (req: Request, res: Response) => {
+export const getMe: RequestHandler = asyncHandler(async (req, res) => {
   const user = await userService.getUserById(req.userId!);
 
   return ApiResponse.ok(res, 'User profile retrieved', user);
@@ -20,7 +20,7 @@ export const getMe = asyncHandler(async (req: Request, res: Response) => {
  * @route   PATCH /api/v1/users/me
  * @access  Private
  */
-export const updateMe = asyncHandler(async (req: Request, res: Response) => {
+export const updateMe: RequestHandler = asyncHandler(async (req, res) => {
   const updates = req.body as UpdateUserInput;
 
   const user = await userService.updateUser(req.userId!, updates);
@@ -33,7 +33,7 @@ export const updateMe = asyncHandler(async (req: Request, res: Response) => {
  * @route   POST /api/v1/users/me/profile-image
  * @access  Private
  */
-export const uploadProfileImage = asyncHandler(async (req: Request, res: Response) => {
+export const uploadProfileImage: RequestHandler = asyncHandler(async (req, res) => {
   if (!req.file) {
     return ApiResponse.error(res, 400, 'No image file provided');
   }
@@ -50,7 +50,7 @@ export const uploadProfileImage = asyncHandler(async (req: Request, res: Respons
  * @route   DELETE /api/v1/users/me/profile-image
  * @access  Private
  */
-export const removeProfileImage = asyncHandler(async (req: Request, res: Response) => {
+export const removeProfileImage: RequestHandler = asyncHandler(async (req, res) => {
   const user = await userService.removeProfileImage(req.userId!);
 
   return ApiResponse.ok(res, 'Profile image removed', user);
@@ -61,7 +61,7 @@ export const removeProfileImage = asyncHandler(async (req: Request, res: Respons
  * @route   DELETE /api/v1/users/me
  * @access  Private
  */
-export const deactivateAccount = asyncHandler(async (req: Request, res: Response) => {
+export const deactivateAccount: RequestHandler = asyncHandler(async (req, res) => {
   await userService.deactivateAccount(req.userId!);
 
   return ApiResponse.ok(res, 'Account deactivated successfully');

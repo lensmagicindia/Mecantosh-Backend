@@ -1,9 +1,9 @@
-import { Request, Response } from 'express';
+import { RequestHandler } from 'express';
 import { unavailabilityService } from '../../services/admin/unavailability.service.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
 import { ApiError } from '../../utils/ApiError.js';
 
-export const createUnavailability = asyncHandler(async (req: Request, res: Response) => {
+export const createUnavailability: RequestHandler = asyncHandler(async (req, res) => {
   const unavailability = await unavailabilityService.create(req.body);
   res.status(201).json({
     success: true,
@@ -12,7 +12,7 @@ export const createUnavailability = asyncHandler(async (req: Request, res: Respo
   });
 });
 
-export const listUnavailability = asyncHandler(async (req: Request, res: Response) => {
+export const listUnavailability: RequestHandler = asyncHandler(async (req, res) => {
   const { startDate, endDate } = req.query;
   const unavailabilities = await unavailabilityService.list(
     startDate as string | undefined,
@@ -25,7 +25,7 @@ export const listUnavailability = asyncHandler(async (req: Request, res: Respons
   });
 });
 
-export const getUnavailabilityByDate = asyncHandler(async (req: Request, res: Response) => {
+export const getUnavailabilityByDate: RequestHandler = asyncHandler(async (req, res) => {
   const { date } = req.params;
   const unavailabilities = await unavailabilityService.getByDate(date);
   res.json({
@@ -35,7 +35,7 @@ export const getUnavailabilityByDate = asyncHandler(async (req: Request, res: Re
   });
 });
 
-export const getUnavailabilityById = asyncHandler(async (req: Request, res: Response) => {
+export const getUnavailabilityById: RequestHandler = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const unavailability = await unavailabilityService.getById(id);
   res.json({
@@ -45,7 +45,7 @@ export const getUnavailabilityById = asyncHandler(async (req: Request, res: Resp
   });
 });
 
-export const updateUnavailability = asyncHandler(async (req: Request, res: Response) => {
+export const updateUnavailability: RequestHandler = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const unavailability = await unavailabilityService.update(id, req.body);
   res.json({
@@ -55,7 +55,7 @@ export const updateUnavailability = asyncHandler(async (req: Request, res: Respo
   });
 });
 
-export const deleteUnavailability = asyncHandler(async (req: Request, res: Response) => {
+export const deleteUnavailability: RequestHandler = asyncHandler(async (req, res) => {
   const { id } = req.params;
   await unavailabilityService.delete(id);
   res.json({
@@ -64,7 +64,7 @@ export const deleteUnavailability = asyncHandler(async (req: Request, res: Respo
   });
 });
 
-export const getDatesWithUnavailability = asyncHandler(async (req: Request, res: Response) => {
+export const getDatesWithUnavailability: RequestHandler = asyncHandler(async (req, res) => {
   const { startDate, endDate } = req.query;
   if (!startDate || !endDate) {
     throw ApiError.badRequest('startDate and endDate are required');

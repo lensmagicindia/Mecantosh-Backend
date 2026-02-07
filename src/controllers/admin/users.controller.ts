@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { RequestHandler } from 'express';
 import { adminUsersService } from '../../services/admin/users.service.js';
 import { ApiResponse } from '../../utils/ApiResponse.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
@@ -8,7 +8,7 @@ import { asyncHandler } from '../../utils/asyncHandler.js';
  * @route   GET /api/v1/admin/users
  * @access  Private (Admin)
  */
-export const getUsers = asyncHandler(async (req: Request, res: Response) => {
+export const getUsers: RequestHandler = asyncHandler(async (req, res) => {
   const page = parseInt(req.query.page as string) || 1;
   const limit = parseInt(req.query.limit as string) || 20;
   const search = req.query.search as string | undefined;
@@ -37,7 +37,7 @@ export const getUsers = asyncHandler(async (req: Request, res: Response) => {
  * @route   GET /api/v1/admin/users/:id
  * @access  Private (Admin)
  */
-export const getUserById = asyncHandler(async (req: Request, res: Response) => {
+export const getUserById: RequestHandler = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   const user = await adminUsersService.getUserById(id);
@@ -50,7 +50,7 @@ export const getUserById = asyncHandler(async (req: Request, res: Response) => {
  * @route   GET /api/v1/admin/users/export
  * @access  Private (Admin)
  */
-export const exportUsers = asyncHandler(async (req: Request, res: Response) => {
+export const exportUsers: RequestHandler = asyncHandler(async (req, res) => {
   const format = (req.query.format as 'csv' | 'excel') || 'csv';
 
   const csv = await adminUsersService.exportUsers(format);

@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { RequestHandler } from 'express';
 import { adminsService } from '../../services/admin/admins.service.js';
 import { ApiResponse } from '../../utils/ApiResponse.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
@@ -9,7 +9,7 @@ import { AdminRole } from '../../interfaces/admin.interface.js';
  * @route   GET /api/v1/admin/admins
  * @access  Private (Super Admin)
  */
-export const getAdmins = asyncHandler(async (req: Request, res: Response) => {
+export const getAdmins: RequestHandler = asyncHandler(async (req, res) => {
   const page = parseInt(req.query.page as string) || 1;
   const limit = parseInt(req.query.limit as string) || 20;
   const search = req.query.search as string | undefined;
@@ -36,7 +36,7 @@ export const getAdmins = asyncHandler(async (req: Request, res: Response) => {
  * @route   GET /api/v1/admin/admins/:id
  * @access  Private (Super Admin)
  */
-export const getAdminById = asyncHandler(async (req: Request, res: Response) => {
+export const getAdminById: RequestHandler = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   const admin = await adminsService.getAdminById(id);
@@ -49,7 +49,7 @@ export const getAdminById = asyncHandler(async (req: Request, res: Response) => 
  * @route   POST /api/v1/admin/admins
  * @access  Private (Super Admin)
  */
-export const createAdmin = asyncHandler(async (req: Request, res: Response) => {
+export const createAdmin: RequestHandler = asyncHandler(async (req, res) => {
   const { email, password, name, role, permissions, isActive } = req.body;
 
   const admin = await adminsService.createAdmin({
@@ -69,7 +69,7 @@ export const createAdmin = asyncHandler(async (req: Request, res: Response) => {
  * @route   PATCH /api/v1/admin/admins/:id
  * @access  Private (Super Admin)
  */
-export const updateAdmin = asyncHandler(async (req: Request, res: Response) => {
+export const updateAdmin: RequestHandler = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { email, password, name, role, permissions, isActive } = req.body;
   const requesterId = req.adminId!;
@@ -88,7 +88,7 @@ export const updateAdmin = asyncHandler(async (req: Request, res: Response) => {
  * @route   DELETE /api/v1/admin/admins/:id
  * @access  Private (Super Admin)
  */
-export const deleteAdmin = asyncHandler(async (req: Request, res: Response) => {
+export const deleteAdmin: RequestHandler = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const requesterId = req.adminId!;
 
@@ -102,7 +102,7 @@ export const deleteAdmin = asyncHandler(async (req: Request, res: Response) => {
  * @route   PATCH /api/v1/admin/admins/:id/toggle-status
  * @access  Private (Super Admin)
  */
-export const toggleAdminStatus = asyncHandler(async (req: Request, res: Response) => {
+export const toggleAdminStatus: RequestHandler = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const requesterId = req.adminId!;
 
@@ -116,7 +116,7 @@ export const toggleAdminStatus = asyncHandler(async (req: Request, res: Response
  * @route   GET /api/v1/admin/admins/permissions
  * @access  Private (Super Admin)
  */
-export const getPermissions = asyncHandler(async (_req: Request, res: Response) => {
+export const getPermissions: RequestHandler = asyncHandler(async (_req, res) => {
   const permissions = adminsService.getAvailablePermissions();
 
   return ApiResponse.ok(res, 'Permissions retrieved', permissions);

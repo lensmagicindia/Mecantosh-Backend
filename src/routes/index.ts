@@ -7,7 +7,7 @@ import bookingRoutes from './booking.routes.js';
 import notificationRoutes from './notification.routes.js';
 import adminRoutes from './admin/index.js';
 
-const router = Router();
+const router: Router = Router();
 
 // Health check
 router.get('/health', (_req, res) => {

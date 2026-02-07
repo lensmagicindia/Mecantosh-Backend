@@ -4,7 +4,7 @@ import { authenticateAdmin, requirePermission } from '../../middleware/adminAuth
 import { validate } from '../../middleware/validation.middleware.js';
 import { updateBookingStatusSchema } from '../../validators/admin.validator.js';
 
-const router = Router();
+const router: Router = Router();
 
 // All routes require admin authentication and bookings permission
 router.use(authenticateAdmin);

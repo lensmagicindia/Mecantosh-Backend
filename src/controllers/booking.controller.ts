@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { RequestHandler } from 'express';
 import { bookingService } from '../services/booking.service.js';
 import { slotService } from '../services/slot.service.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
@@ -16,7 +16,7 @@ import {
  * @route   GET /api/v1/bookings
  * @access  Private
  */
-export const getBookings = asyncHandler(async (req: Request, res: Response) => {
+export const getBookings: RequestHandler = asyncHandler(async (req, res) => {
   const query = req.query as unknown as GetBookingsQuery;
 
   const result = await bookingService.getUserBookings(req.userId!, {
@@ -33,7 +33,7 @@ export const getBookings = asyncHandler(async (req: Request, res: Response) => {
  * @route   GET /api/v1/bookings/:id
  * @access  Private
  */
-export const getBooking = asyncHandler(async (req: Request, res: Response) => {
+export const getBooking: RequestHandler = asyncHandler(async (req, res) => {
   const booking = await bookingService.getBookingById(req.params.id, req.userId!);
 
   return ApiResponse.ok(res, 'Booking retrieved', booking);
@@ -44,7 +44,7 @@ export const getBooking = asyncHandler(async (req: Request, res: Response) => {
  * @route   POST /api/v1/bookings
  * @access  Private
  */
-export const createBooking = asyncHandler(async (req: Request, res: Response) => {
+export const createBooking: RequestHandler = asyncHandler(async (req, res) => {
   const data = req.body as CreateBookingInput;
 
   const booking = await bookingService.createBooking(req.userId!, data);
@@ -57,7 +57,7 @@ export const createBooking = asyncHandler(async (req: Request, res: Response) =>
  * @route   PATCH /api/v1/bookings/:id
  * @access  Private
  */
-export const updateBooking = asyncHandler(async (req: Request, res: Response) => {
+export const updateBooking: RequestHandler = asyncHandler(async (req, res) => {
   const data = req.body as UpdateBookingInput;
 
   const booking = await bookingService.updateBooking(req.params.id, req.userId!, data);
@@ -70,7 +70,7 @@ export const updateBooking = asyncHandler(async (req: Request, res: Response) =>
  * @route   POST /api/v1/bookings/:id/cancel
  * @access  Private
  */
-export const cancelBooking = asyncHandler(async (req: Request, res: Response) => {
+export const cancelBooking: RequestHandler = asyncHandler(async (req, res) => {
   const { reason } = req.body as CancelBookingInput;
 
   const booking = await bookingService.cancelBooking(req.params.id, req.userId!, reason);
@@ -83,7 +83,7 @@ export const cancelBooking = asyncHandler(async (req: Request, res: Response) =>
  * @route   GET /api/v1/bookings/slots/availability
  * @access  Private
  */
-export const checkAvailability = asyncHandler(async (req: Request, res: Response) => {
+export const checkAvailability: RequestHandler = asyncHandler(async (req, res) => {
   const { date, serviceId } = req.query as unknown as CheckAvailabilityQuery;
 
   const availability = await slotService.getAvailableSlots(date, serviceId);

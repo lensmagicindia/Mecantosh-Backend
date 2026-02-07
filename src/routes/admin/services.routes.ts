@@ -8,7 +8,7 @@ import {
   reorderServicesSchema,
 } from '../../validators/admin.validator.js';
 
-const router = Router();
+const router: Router = Router();
 
 // All routes require admin authentication and services permission
 router.use(authenticateAdmin);
