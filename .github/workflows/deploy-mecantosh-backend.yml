@@ -11,11 +11,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout
+      # 1️⃣ Checkout code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2️⃣ Node 20 (AWS SDK compatible)
+      # 2️⃣ Setup Node.js (AWS SDK requires Node 20)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -30,15 +30,15 @@ jobs:
       - name: Build backend
         run: npm run build
 
-      # 5️⃣ Verify build output (IMPORTANT)
+      # 5️⃣ Verify build output
       - name: Verify build output
         run: |
-          echo "Listing root:"
+          echo "Root contents:"
           ls -la
-          echo "Listing build folder:"
-          ls -la build
+          echo "Dist contents:"
+          ls -la dist
 
-      # 6️⃣ Copy build to EC2
+      # 6️⃣ Copy build artifacts to EC2
       - name: Copy build to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -47,13 +47,13 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           source: |
-            build
+            dist
             package.json
             package-lock.json
             ecosystem.config.js
           target: /home/ubuntu/Mecantosh-Backend
 
-      # 7️⃣ Restart backend
+      # 7️⃣ Install prod deps & restart with PM2
       - name: Restart backend on EC2
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -63,6 +63,4 @@ jobs:
           port: 22
           script: |
             cd /home/ubuntu/Mecantosh-Backend
-            npm install --omit=dev
-            pm2 reload ecosystem.config.js --env production || pm2 start ecosystem.config.js --env production
-            pm2 save
+            npm instal
