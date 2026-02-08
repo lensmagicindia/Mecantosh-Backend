@@ -1,0 +1,87 @@
+name: Deploy Mecantosh Backend to EC2
+
+on:
+  push:
+    branches:
+      - master   # Auto deploy on main branch push
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+
+      # 3️⃣ Setup pnpm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      # 4️⃣ Install dependencies
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      # 5️⃣ Build backend (TypeScript → dist)
+      - name: Build backend
+        run: |
+          echo "🏗️ Building Mecantosh backend..."
+          pnpm run build
+
+      # 6️⃣ Copy build artifacts to EC2
+      - name: Copy build to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "dist/,package.json,pnpm-lock.yaml"
+          target: "~/Mecantosh-Backend/"
+
+      # 7️⃣ Restart backend using PM2
+      - name: Restart backend on EC2
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -e
+            cd ~/Mecantosh-Backend
+
+            echo "🔄 Backing up existing dist..."
+            mkdir -p ~/Mecantosh-Backend_backup
+            cp -r dist ~/Mecantosh-Backend_backup/dist_$(date +%Y%m%d_%H%M%S) || true
+
+            echo "📦 Ensuring pnpm is available..."
+            export PATH="$PATH:/home/ubuntu/.local/share/pnpm"
+            if ! command -v pnpm &> /dev/null; then
+              curl -fsSL https://get.pnpm.io/install.sh | bash -
+              export PATH="$PATH:/home/ubuntu/.local/share/pnpm"
+              echo 'export PATH="$PATH:/home/ubuntu/.local/share/pnpm"' >> ~/.bashrc
+            fi
+
+            echo "📦 Installing production dependencies..."
+            pnpm install --prod
+
+            echo "🚀 Restarting PM2 process..."
+            pm2 restart mecantosh-backend || pm2 start dist/server.js --name mecantosh-backend
+            pm2 save
+
+            echo "✅ Mecantosh backend deployed successfully."
+
+      # 8️⃣ Deployment summary
+      - name: Deployment summary
+        run: |
+          echo "✅ Mecantosh backend deployed"
+          echo "Commit: $GITHUB_SHA"
+          echo "Time: $(date)"
