@@ -1,4 +1,4 @@
-name: Deploy Mecantosh Backend (Prod)
+name: Build & Deploy Backend
 
 on:
   push:
@@ -9,29 +9,36 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    name: Build & Deploy Backend
 
     steps:
       # 1️⃣ Checkout
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2️⃣ Setup Node.js (IMPORTANT: Node 20)
+      # 2️⃣ Node 20 (AWS SDK compatible)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: npm
 
-      # 3️⃣ Install dependencies (NON-STRICT during dev)
+      # 3️⃣ Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # 4️⃣ Build TypeScript backend
+      # 4️⃣ Build backend
       - name: Build backend
         run: npm run build
 
-      # 5️⃣ Copy build to EC2
+      # 5️⃣ Verify build output (IMPORTANT)
+      - name: Verify build output
+        run: |
+          echo "Listing root:"
+          ls -la
+          echo "Listing build folder:"
+          ls -la build
+
+      # 6️⃣ Copy build to EC2
       - name: Copy build to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -40,13 +47,13 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           source: |
-            dist
+            build
             package.json
             package-lock.json
             ecosystem.config.js
           target: /home/ubuntu/Mecantosh-Backend
 
-      # 6️⃣ Install prod deps & restart via PM2
+      # 7️⃣ Restart backend
       - name: Restart backend on EC2
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -59,10 +66,3 @@ jobs:
             npm install --omit=dev
             pm2 reload ecosystem.config.js --env production || pm2 start ecosystem.config.js --env production
             pm2 save
-
-      # 7️⃣ Summary
-      - name: Deployment summary
-        run: |
-          echo "✅ Mecantosh Backend deployed"
-          echo "🟢 Node: 20.x"
-          echo "📦 Package manager: npm"
