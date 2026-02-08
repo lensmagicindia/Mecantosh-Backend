@@ -1,4 +1,4 @@
-name: Build & Deploy Backend
+name: Deploy Mecantosh Backend
 
 on:
   push:
@@ -11,56 +11,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout code
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2️⃣ Setup Node.js (AWS SDK requires Node 20)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
 
-      # 3️⃣ Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # 4️⃣ Build backend
       - name: Build backend
         run: npm run build
 
-      # 5️⃣ Verify build output
-      - name: Verify build output
-        run: |
-          echo "Root contents:"
-          ls -la
-          echo "Dist contents:"
-          ls -la dist
+      - name: Verify dist folder
+        run: ls -la dist
 
-      # 6️⃣ Copy build artifacts to EC2
       - name: Copy build to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          port: 22
-          source: |
-            dist
-            package.json
-            package-lock.json
-            ecosystem.config.js
+          source: "dist,package.json,package-lock.json"
           target: /home/ubuntu/Mecantosh-Backend
 
-      # 7️⃣ Install prod deps & restart with PM2
       - name: Restart backend on EC2
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          port: 22
           script: |
             cd /home/ubuntu/Mecantosh-Backend
-            npm instal
+            npm install --omit=dev
+            pm2 restart mecantosh-backend || pm2 start dist/server.js --name mecantosh-backend
+            pm2 save
