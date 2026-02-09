@@ -11,10 +11,16 @@ export const config = {
   // MongoDB
   mongodbUri: process.env.MONGODB_URI || 'mongodb://localhost:27017/mecantosh',
 
-  // JWT
+  // JWT — secrets are required, server refuses to start without them
   jwt: {
-    accessSecret: process.env.JWT_ACCESS_SECRET || 'default-access-secret-change-in-production',
-    refreshSecret: process.env.JWT_REFRESH_SECRET || 'default-refresh-secret-change-in-production',
+    accessSecret: (() => {
+      if (!process.env.JWT_ACCESS_SECRET) throw new Error('JWT_ACCESS_SECRET env var is required');
+      return process.env.JWT_ACCESS_SECRET;
+    })(),
+    refreshSecret: (() => {
+      if (!process.env.JWT_REFRESH_SECRET) throw new Error('JWT_REFRESH_SECRET env var is required');
+      return process.env.JWT_REFRESH_SECRET;
+    })(),
     accessExpiry: process.env.JWT_ACCESS_EXPIRY || '15m',
     refreshExpiry: process.env.JWT_REFRESH_EXPIRY || '7d',
   },

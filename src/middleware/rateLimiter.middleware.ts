@@ -15,8 +15,8 @@ export const generalLimiter = rateLimit({
 
 // Strict rate limiter for auth endpoints (OTP)
 export const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // 5 OTP requests per window
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: 15, // 15 OTP requests per window
   message: {
     success: false,
     message: 'Too many OTP requests, please try again later',

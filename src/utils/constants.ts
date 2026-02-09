@@ -56,7 +56,7 @@ export const DEFAULT_TAX_RATE = 0.0;
 export const MAX_BOOKINGS_PER_SLOT = 3;
 export const OTP_LENGTH = 4;
 export const OTP_EXPIRY_MINUTES = 5;
-export const MAX_OTP_ATTEMPTS = 3;
+export const MAX_OTP_ATTEMPTS = 5;
 
 export const UPLOAD_LIMITS = {
   MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB

@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import mongoose from 'mongoose';
 import { config } from '../src/config/index.js';
 import AdminUser from '../src/models/AdminUser.model.js';
@@ -8,19 +9,30 @@ const seedAdmin = async () => {
     await mongoose.connect(config.mongodbUri);
     console.log('Connected to MongoDB');
 
+    const email = process.env.ADMIN_SEED_EMAIL || 'admin@mecantosh.com';
+
     // Check if admin already exists
-    const existingAdmin = await AdminUser.findOne({ email: 'admin@mecantosh.com' });
+    const existingAdmin = await AdminUser.findOne({ email });
 
     if (existingAdmin) {
       console.log('Admin user already exists');
-      console.log('Email: admin@mecantosh.com');
+      console.log('Email:', email);
       process.exit(0);
+    }
+
+    // Use env var password or generate a secure random one
+    let password = process.env.ADMIN_SEED_PASSWORD;
+    let wasGenerated = false;
+
+    if (!password) {
+      password = crypto.randomBytes(16).toString('base64url');
+      wasGenerated = true;
     }
 
     // Create admin user
     const admin = await AdminUser.create({
-      email: 'admin@mecantosh.com',
-      password: 'Admin@123',
+      email,
+      password,
       name: 'Admin User',
       role: 'super_admin',
       permissions: ['*'],
@@ -29,7 +41,12 @@ const seedAdmin = async () => {
 
     console.log('Admin user created successfully!');
     console.log('Email:', admin.email);
-    console.log('Password: Admin@123');
+    if (wasGenerated) {
+      console.log('Generated password:', password);
+      console.log('\n⚠  SAVE THIS PASSWORD NOW — it will not be shown again.');
+    } else {
+      console.log('Password: (set via ADMIN_SEED_PASSWORD env var)');
+    }
     console.log('Role:', admin.role);
     console.log('\nPlease change the password after first login!');
 
